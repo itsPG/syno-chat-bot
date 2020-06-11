@@ -7,54 +7,63 @@
  *
  */
 
-import axios from 'axios';
-
-import UrlBuilder from './UrlBuilder';
+import ChatApi from './ChatApi';
 
 class UserCollection {
   usernameMap?: Map<string, number>;
-  urlBuilder: UrlBuilder;
 
-  constructor(urlBuilder: UrlBuilder) {
+  userMap?: Map<number, any>;
+
+  chatApi: ChatApi;
+
+  constructor(chatApi: ChatApi) {
     this.usernameMap = undefined;
-    this.urlBuilder = urlBuilder;
+    this.chatApi = chatApi;
   }
 
   async forceFetch() {
     this.usernameMap = undefined;
+    this.userMap = undefined;
     return this.fetch();
   }
 
   async fetch() {
-    if (this.usernameMap !== undefined) {
-      return this.usernameMap;
+    if (this.userMap !== undefined) {
+      return;
     }
 
-    const userResp = await axios.get(this.urlBuilder.userList());
+    const userResp = await this.chatApi.getUserList();
+    this.userMap = new Map<number, any>();
     this.usernameMap = new Map<string, number>();
 
-    userResp.data.data.users.forEach((user: any) => {
+    userResp.forEach((user: any) => {
       this.usernameMap?.set(user.username, user.user_id);
+      this.userMap?.set(user.user_id, user);
     });
-
-    return this.usernameMap;
   }
 
-  async get() {
-    return this.fetch();
+  async getUserMap() {
+    await this.fetch();
+    return this.userMap;
+  }
+
+  async getUsernameMap() {
+    await this.fetch();
+    return this.usernameMap;
   }
 
   async getIdsByNames(userNames: Array<string>): Promise<Array<number>> {
     const notUndefined = function <T>(x: T | undefined): x is T {
       return x !== undefined;
-    }
-    const usernameMap = await this.get();
+    };
+    const usernameMap = await this.getUsernameMap();
 
     return userNames
-      .map((userName: string) => usernameMap?.get(userName) ? usernameMap?.get(userName) : undefined)
+      .map(
+        (userName: string) => (usernameMap?.get(userName) ? usernameMap?.get(userName) : undefined),
+      )
       .filter(notUndefined);
   }
-
-};
+}
 
 export default UserCollection;

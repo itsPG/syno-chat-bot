@@ -11,6 +11,7 @@ import express from 'express';
 
 class BotAction {
   resp: express.Response<any>;
+
   nextFn: express.NextFunction;
 
   constructor(resp: express.Response<any>, nextFn: express.NextFunction) {
@@ -19,7 +20,7 @@ class BotAction {
   }
 
   send(text: string) {
-    this.resp.json({ text: text });
+    this.resp.json({ text });
   }
 
   end() {
@@ -29,7 +30,6 @@ class BotAction {
   next() {
     this.nextFn();
   }
-
-};
+}
 
 export default BotAction;
