@@ -12,6 +12,30 @@ Yarn (npm should also be fine, not tested though)
 yarn add syno-chat-bot
 ```
 
+## Quickstart Guide
+
+Here's an example help you build your own chat bot in 5 minutes.
+
+```
+const express = require('express');
+const { SynoChatBot } = require('syno-chat-bot');
+
+const app = express();
+const chatBot = new SynoChatBot(
+  'http://YOUR_DS.org:5000/',
+  'YOUR_CHAT_TOKEN',
+  app,
+  'http://localhost:3003/',
+  '/',
+  (payload, action) => {
+    action.send(JSON.stringify(payload));
+  }
+);
+
+console.log(`ChatBot is listening`);
+app.listen(3003);
+```
+
 ## Usage
 
 see example/* for more info
