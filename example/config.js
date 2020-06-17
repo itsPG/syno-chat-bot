@@ -8,8 +8,9 @@
  */
 
 module.exports = {
-  url: 'http://example.com:5000/',
-  token: 'jvVnXyPvpmIpMHVkn7bJcmahrjKzAf1kiANf4f18WtCalv6D8Y1EvJp6zi8jX7M5',
+  url: 'http://your.ds:5000/',
+  token: 'YOUR_CHAT_BOT_TOKEN',
+  hostUrl: 'http://your.host:3003',
   serverRoutePath: '/',
   serverPort: 3003,
 };

@@ -8,22 +8,27 @@
  */
 
 const express = require('express');
-const { SynoChatBot } = require('syno-chat-bot');
+const { SynoChatBot } = require('syno-chat-bot'); // eslint-disable-line
 const {
   url,
   token,
+  hostUrl,
   serverRoutePath,
   serverPort,
-} = require('./example_config');
+} = require('./config');
 
 const app = express();
 // the callback of SynoChatBot will be invoked whenever messages sent to this bot
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const chatBot = new SynoChatBot(url, token, app, serverRoutePath, (payload, action) => {
+const chatBot = new SynoChatBot(url, token, app, hostUrl, serverRoutePath, (payload, action) => {
   console.log(payload);
   // use action.send to reply message
   action.send(JSON.stringify(payload));
+
+  // you may use chatBot.createTempFileUrl(YOUR_PATH)
+  // as the second params to send file to ChatServer
+  // e.g.
+  // action.send('sending a file as attachment', chatBot.createTempFileUrl('/tmp/123.txt'));
 });
 
-console.log(`ChatBot is listening ${serverPort}`);
+console.log(`ChatBot is listening ${serverPort} ${chatBot.routePath}`);
 app.listen(serverPort);

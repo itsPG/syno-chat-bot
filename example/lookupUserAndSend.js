@@ -8,18 +8,24 @@
  */
 
 const express = require('express');
-const { SynoChatBot } = require('syno-chat-bot');
+const { SynoChatBot } = require('syno-chat-bot'); // eslint-disable-line
 const {
   url,
   token,
+  hostUrl,
   serverRoutePath,
   serverPort,
-} = require('./example_config');
+} = require('./config');
 
 const app = express();
-const chatBot = new SynoChatBot(url, token, app, serverRoutePath, (payload/* , action */) => {
-  console.log(payload);
-});
+const chatBot = new SynoChatBot(
+  url, token, app, hostUrl, serverRoutePath,
+  (payload, action) => {
+    console.log(payload);
+    // no reply for incoming msg
+    action.end();
+  },
+);
 
 /*
   this demostrates how to send text without callback
@@ -53,8 +59,9 @@ chatBot.userCollection.getUsernameMap()
       */
       chatBot.send([userId], `send text by user_id ${userId}`);
       chatBot.sendByUserNames([username], `send text by username ${username}`);
+      break;
     }
   });
 
 console.log(`ChatBot is listening ${serverPort}`);
-app.listen(serverPort);
+// app.listen(serverPort);

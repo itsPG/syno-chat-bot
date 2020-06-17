@@ -19,8 +19,11 @@ class BotAction {
     this.nextFn = nextFn;
   }
 
-  send(text: string) {
-    this.resp.json({ text });
+  send(text: string, fileUrl?: string) {
+    this.resp.json({
+      text,
+      file_url: fileUrl,
+    });
   }
 
   end() {

@@ -23,15 +23,18 @@ class ChatApi {
   /*
     WARNING: ChatServer seems existing bugs. It can't handle array containing more than one user.
   */
-  async send(userIds: Array<number>, text: string) {
+  async send(userIds: Array<number>, text: string, fileUrl?: string) {
     const url = `${this.baseUrl()}&method=chatbot&version=2`;
     // ChatServer seems can't accept application/json ?
     // use qs.stringify to apply "application / x-www-form-urlencoded" format
+    const payload = JSON.stringify({
+      user_ids: userIds,
+      text,
+      file_url: fileUrl,
+    });
+
     const ret = await ChatApi.sendPost(url, {
-      payload: JSON.stringify({
-        user_ids: userIds,
-        text,
-      }),
+      payload,
     });
 
     return ret;
